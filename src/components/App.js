@@ -16,33 +16,40 @@ class App extends Component {
     super()
     // TODO
     this.state = {
+      word: _.sample(WORDS),
+      guesses: []
     }
   }
 
   choose (letter) {
-    // TODO
+    this.setState({
+      guesses: [...this.state.guesses, letter]
+    })
     console.log('You clicked', letter)
   }
 
   get points () {
-    // TODO
-    return 0
+    return this.state.word.split('').filter((letter) => {
+      return this.state.guesses.includes(letter)
+    }).length
   }
 
   render () {
     // ALPHABET === ['a', 'b', 'c', ... 'z']
     // map over it, returning a <LetterButton> for each letter
-    const letters = ALPHABET.map((letter) => {
+    const letters = ALPHABET.map((letter, i) => {
       return <LetterButton
         value={letter}
         onChoose={() => this.choose(letter)}
-        disabled={false} />
+        disabled={this.state.guesses.includes(letter)}
+        key={i}
+       />
     })
     return <div className='app'>
       <main>
         <Snowman step={this.points} size={400} />
         {/* TODO */}
-        <Word value='SNOWMAN' guesses={['E', 'M', 'O']} />
+        <Word value={this.state.word} guesses={this.state.guesses} />
         <div className='keyboard'>
           {/* TODO */}
           {letters}
